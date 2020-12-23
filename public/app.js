@@ -1,4 +1,4 @@
-mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-button'));
+// mdc.ripple.MDCRipple.attachTo(document.querySelector('.mdc-button'));
 
 const configuration = {
   iceServers: [
@@ -17,18 +17,35 @@ let localStream = null;
 let remoteStream = null;
 let roomDialog = null;
 let roomId = null;
+// const apiUrl = 'http://localhost:3000/api/';
+const apiUrl = 'https://chat.queue.dev.ponomarevlad.ru/api/';
 
-function init() {
-  document.querySelector('#cameraBtn').addEventListener('click', openUserMedia);
-  document.querySelector('#hangupBtn').addEventListener('click', hangUp);
-  document.querySelector('#createBtn').addEventListener('click', createRoom);
-  document.querySelector('#joinBtn').addEventListener('click', joinRoom);
-  roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
+async function connect(){
+  const queue = await fetch(apiUrl + 'get').then(_ => _.json()).catch(e => console.error(e) || {room: null});
+  return queue.room && queue.room.id ? await joinRoomById(queue.room.id) : await createRoom();
+}
+
+async function reConnect(){
+  await hangUp();
+  await openUserMedia();
+  return await connect();
+}
+
+async function init() {
+  // document.querySelector('#cameraBtn').addEventListener('click', openUserMedia);
+  // document.querySelector('#hangupBtn').addEventListener('click', hangUp);
+  // document.querySelector('#createBtn').addEventListener('click', createRoom);
+  // document.querySelector('#joinBtn').addEventListener('click', joinRoom);
+  // roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
+
+  await openUserMedia();
+  return await connect();
+
 }
 
 async function createRoom() {
-  document.querySelector('#createBtn').disabled = true;
-  document.querySelector('#joinBtn').disabled = true;
+  // document.querySelector('#createBtn').disabled = true;
+  // document.querySelector('#joinBtn').disabled = true;
   const db = firebase.firestore();
   const roomRef = await db.collection('rooms').doc();
 
@@ -68,8 +85,9 @@ async function createRoom() {
   await roomRef.set(roomWithOffer);
   roomId = roomRef.id;
   console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
-  document.querySelector(
-      '#currentRoom').innerText = `Current room is ${roomRef.id} - You are the caller!`;
+  // document.querySelector('#currentRoom').innerText = `Current room is ${roomRef.id} - You are the caller!`;
+  fetch(apiUrl + 'insert?id=' + roomRef.id).then(_ => _.json())
+      .then(insert => insert.status && insert.status.id ? reConnect() : true)
   // Code for creating a room above
 
   peerConnection.addEventListener('track', event => {
@@ -104,19 +122,22 @@ async function createRoom() {
   // Listen for remote ICE candidates above
 }
 
-function joinRoom() {
-  document.querySelector('#createBtn').disabled = true;
-  document.querySelector('#joinBtn').disabled = true;
+async function joinRoom() {
 
-  document.querySelector('#confirmJoinBtn').
-      addEventListener('click', async () => {
-        roomId = document.querySelector('#room-id').value;
+
+  // document.querySelector('#confirmJoinBtn').
+  //     addEventListener('click', async () => {
+        roomId = prompt('Enter ID for room to join:');//document.querySelector('#room-id').value;
+        if(!roomId) return;
+
+  // document.querySelector('#createBtn').disabled = true;
+  // document.querySelector('#joinBtn').disabled = true;
+
         console.log('Join room: ', roomId);
-        document.querySelector(
-            '#currentRoom').innerText = `Current room is ${roomId} - You are the callee!`;
+        // document.querySelector('#currentRoom').innerText = `Current room is ${roomId} - You are the callee!`;
         await joinRoomById(roomId);
-      }, {once: true});
-  roomDialog.open();
+      // }, {once: true});
+  // roomDialog.open();
 }
 
 async function joinRoomById(roomId) {
@@ -124,6 +145,7 @@ async function joinRoomById(roomId) {
   const roomRef = db.collection('rooms').doc(`${roomId}`);
   const roomSnapshot = await roomRef.get();
   console.log('Got room:', roomSnapshot.exists);
+  fetch(apiUrl + 'remove?id=' + roomId);
 
   if (roomSnapshot.exists) {
     console.log('Create PeerConnection with configuration: ', configuration);
@@ -181,7 +203,7 @@ async function joinRoomById(roomId) {
       });
     });
     // Listening for remote ICE candidates above
-  }
+  } else return await reConnect()
 }
 
 async function openUserMedia(e) {
@@ -193,10 +215,10 @@ async function openUserMedia(e) {
   document.querySelector('#remoteVideo').srcObject = remoteStream;
 
   console.log('Stream:', document.querySelector('#localVideo').srcObject);
-  document.querySelector('#cameraBtn').disabled = true;
-  document.querySelector('#joinBtn').disabled = false;
-  document.querySelector('#createBtn').disabled = false;
-  document.querySelector('#hangupBtn').disabled = false;
+  // document.querySelector('#cameraBtn').disabled = true;
+  // document.querySelector('#joinBtn').disabled = false;
+  // document.querySelector('#createBtn').disabled = false;
+  // document.querySelector('#hangupBtn').disabled = false;
 }
 
 async function hangUp(e) {
@@ -215,11 +237,11 @@ async function hangUp(e) {
 
   document.querySelector('#localVideo').srcObject = null;
   document.querySelector('#remoteVideo').srcObject = null;
-  document.querySelector('#cameraBtn').disabled = false;
-  document.querySelector('#joinBtn').disabled = true;
-  document.querySelector('#createBtn').disabled = true;
-  document.querySelector('#hangupBtn').disabled = true;
-  document.querySelector('#currentRoom').innerText = '';
+  // document.querySelector('#cameraBtn').disabled = false;
+  // document.querySelector('#joinBtn').disabled = true;
+  // document.querySelector('#createBtn').disabled = true;
+  // document.querySelector('#hangupBtn').disabled = true;
+  // document.querySelector('#currentRoom').innerText = '';
 
   // Delete room on hangup
   if (roomId) {
@@ -236,7 +258,7 @@ async function hangUp(e) {
     await roomRef.delete();
   }
 
-  document.location.reload(true);
+  // document.location.reload(true);
 }
 
 function registerPeerConnectionListeners() {
@@ -247,6 +269,11 @@ function registerPeerConnectionListeners() {
 
   peerConnection.addEventListener('connectionstatechange', () => {
     console.log(`Connection state change: ${peerConnection.connectionState}`);
+    switch (peerConnection.connectionState){
+      case "disconnected":
+      case "failed":
+        return reConnect()
+    }
   });
 
   peerConnection.addEventListener('signalingstatechange', () => {

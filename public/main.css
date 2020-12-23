@@ -1,90 +1,39 @@
 body {
-    background: #ECEFF1;
-    color: rgba(0, 0, 0, 0.87);
-    font-family: Roboto, Helvetica, Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-#message {
-    background: white;
-    max-width: 360px;
-    margin: 100px auto 16px;
-    padding: 32px 24px;
-    border-radius: 3px;
-}
-
-#message h2 {
-    color: #ffa100;
-    font-weight: bold;
-    font-size: 16px;
-    margin: 0 0 8px;
-}
-
-#message h1 {
-    font-size: 22px;
-    font-weight: 300;
-    color: rgba(0, 0, 0, 0.6);
-    margin: 0 0 16px;
-}
-
-#message p {
-    line-height: 140%;
-    margin: 16px 0 24px;
-    font-size: 14px;
-}
-
-#message a {
-    display: block;
-    text-align: center;
-    background: #039be5;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: white;
-    padding: 16px;
-    border-radius: 4px;
-}
-
-#message, #message a {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-}
-
-#load {
-    color: rgba(0, 0, 0, 0.4);
-    text-align: center;
-    font-size: 13px;
-}
-
-@media (max-width: 600px) {
-    body, #message {
-        margin-top: 0;
-        background: white;
-        box-shadow: none;
-    }
-
-    body {
-        border-top: 16px solid #ffa100;
-    }
-}
-
-body {
-    margin: 1em;
-}
-
-button {
-    margin: 0.2em 0.1em;
-}
-
-div#videos {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-div#videos > video {
+    margin: unset;
     background: black;
-    width: 640px;
-    height: 100%;
-    display: block;
-    margin: 1em;
+    --base-padding: 20px;
+}
+
+#remoteVideo {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    object-fit: cover;
+    object-position: center;
+    z-index: 1;
+}
+
+#localVideo {
+    /*width: 200px;*/
+    max-width: calc(50vw - 20px);
+    max-height: calc(30vh - 20px);
+    position: fixed;
+    bottom: max(env(safe-area-inset-bottom), var(--base-padding));
+    right: max(env(safe-area-inset-right), var(--base-padding));
+    background: black;
+    border: 1px solid white;
+    z-index: 2;
+}
+
+.logo {
+    position: fixed;
+    top: max(env(safe-area-inset-top), var(--base-padding));
+    left: max(env(safe-area-inset-left), var(--base-padding));
+    width: 200px;
+    z-index: 100;
 }
