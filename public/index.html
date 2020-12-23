@@ -2,17 +2,21 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <title>Naumen</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>Видео-чат — Дерзайти — Naumen</title>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script defer src="/__/firebase/init.js"></script>
-    <link rel="stylesheet" type="text/css" href="main.css">
-    <script src="app.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="main.css?v11">
+    <script src="app.js?v11" defer></script>
 </head>
 <body>
-<img src="logo.svg" class="logo" alt="Naumen">
+<img src="logo.png" class="logo" alt="Дерзайти Naumen">
 <video id="localVideo" muted autoplay playsinline></video>
 <video id="remoteVideo" autoplay playsinline></video>
+<time id="timer">Ищем собеседника ...</time>
+<button id="refresh" onclick="location.reload()">Сменить собеседника</button>
+<button id="feedback" onclick="feedback()">Сообщить об ошибке</button>
 </body>
 </html>

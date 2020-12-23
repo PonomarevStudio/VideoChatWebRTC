@@ -2,6 +2,7 @@ body {
     margin: unset;
     background: black;
     --base-padding: 20px;
+    font-family: Helvetica, sans-serif;
 }
 
 #remoteVideo {
@@ -34,6 +35,72 @@ body {
     position: fixed;
     top: max(env(safe-area-inset-top), var(--base-padding));
     left: max(env(safe-area-inset-left), var(--base-padding));
-    width: 200px;
+    width: 300px;
     z-index: 100;
+}
+
+#timer,
+#refresh,
+#feedback {
+    position: fixed;
+    font-size: 30px;
+    color: white;
+    z-index: 10;
+    display: block;
+    padding: 10px 20px;
+    -webkit-backdrop-filter: blur(25px);
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 30px;
+    font-weight: 600;
+}
+
+#timer {
+    top: max(env(safe-area-inset-top), var(--base-padding));
+    right: max(env(safe-area-inset-right), var(--base-padding));
+}
+
+#refresh,
+#feedback {
+    -webkit-appearance: none;
+    border: none;
+    bottom: max(env(safe-area-inset-bottom), var(--base-padding));
+    left: max(env(safe-area-inset-left), var(--base-padding));
+    cursor: pointer;
+}
+
+#feedback {
+    font-size: 16px;
+    padding: 10px 15px;
+    bottom: calc(max(env(safe-area-inset-bottom), var(--base-padding)) + 80px);
+}
+
+#feedback:not(:hover) {
+    color: rgba(255, 255, 255, .5);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.hide {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .logo {
+        width: 150px;
+    }
+
+    #timer,
+    #refresh,
+    #feedback {
+        font-size: 16px;
+        padding: 10px 15px;
+        font-weight: 400;
+    }
+
+    #feedback {
+        bottom: calc(max(env(safe-area-inset-bottom), var(--base-padding)) + 50px);
+    }
+
+    #localVideo {
+        max-height: calc(20vh - 20px);
+    }
 }
