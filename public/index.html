@@ -9,8 +9,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script defer src="/__/firebase/init.js"></script>
     <script src="https://thibaultjanbeyer.github.io/dragNdrop/dNd.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="main.css?v16">
-    <script src="app.js?v16" defer></script>
+    <link rel="stylesheet" type="text/css" href="main.css?v23">
+    <script src="app.js?v23" defer></script>
 </head>
 <body>
 <img src="logo.png" class="logo" alt="Дерзайти Naumen">
@@ -18,6 +18,9 @@
 <video id="remoteVideo" autoplay playsinline></video>
 <time id="timer">Ищем собеседника ...</time>
 <section class="buttons-container">
+    <p id="companion"></p>
+    <p id="user"></p>
+    <p>Если не удалось установить соединение с коллегами, смени браузер или открой чат со смартфона</p>
     <button id="feedback" onclick="feedback()">Сообщить об ошибке</button>
     <button id="refresh" onclick="reConnect()">Сменить собеседника</button>
 </section>

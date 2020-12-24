@@ -24,14 +24,15 @@ const apiUrl = 'https://chat.queue.dev.ponomarevlad.ru/api/';
 
 async function connect() {
     console.log('Connect')
-    const queue = await fetch(apiUrl + 'get').then(_ => _.json()).catch(e => console.error(e) || {room: null});
-    return queue.room && queue.room.id ? await joinRoomById(queue.room.id) : await createRoom();
+    setCompanionUsername();
+    const queue = await fetch(apiUrl + 'get?username=' + auth()).then(_ => _.json()).catch(e => console.error(e) || {room: null});
+    return queue.room && queue.room.id ? await joinRoomById(queue.room.id, queue.room.username) : await createRoom();
 }
 
 async function checkAvailableRooms() {
     console.log('checkAvailableRooms');
-    const queue = await fetch(apiUrl + 'get').then(_ => _.json()).catch(e => console.error(e) || {room: null});
-    return queue.room && queue.room.id ? await reConnect(queue.room.id) : null;
+    const queue = await fetch(apiUrl + 'get?username=' + auth()).then(_ => _.json()).catch(e => console.error(e) || {room: null});
+    return queue.room && queue.room.id ? await reConnect(queue.room) : null;
 }
 
 function initCheckInterval() {
@@ -39,23 +40,33 @@ function initCheckInterval() {
     return interval = setInterval(checkAvailableRooms, 5000);
 }
 
-function removeCheckInterval(){
+function removeCheckInterval() {
     console.log('removeCheckInterval');
     return clearInterval(interval);
 }
 
-async function reConnect(roomId = null) {
-    console.log('reConnect', roomId);
+async function reConnect(room = null) {
+    console.log('reConnect', room);
     try {
         removeCheckInterval();
+        setCompanionUsername();
         deleteTimer('Ищем собеседника ...');
         await hangUp();
         await openUserMedia();
-        return roomId ? await joinRoomById(roomId) : await connect();
+        return room ? await joinRoomById(room.id, room.username) : await connect();
     } catch (e) {
         console.error(e);
         return location.reload();
     }
+}
+
+function auth(message = 'Введи имя или никнейм') {
+    if (!localStorage.getItem('username')) {
+        let username = prompt(message);
+        if (!username || username.length < 3) return auth('Вы ввели слишком короткий никнейм — Введи имя или никнейм');
+        localStorage.setItem('username', username);
+    }
+    return localStorage.getItem('username');
 }
 
 async function init() {
@@ -67,6 +78,8 @@ async function init() {
     // dragElement(document.getElementById("localVideo"));
     // document.getElementById("localVideo").onleavepictureinpicture = e => e.target.style.opacity = 1;
     // document.getElementById("localVideo").onclick = e => e.target.requestPictureInPicture(e.target.style.opacity = 0);
+
+    document.getElementById('user').innerText = 'Вы зашли как: ' + auth();
 
     dragNdrop({
         element: document.getElementById("localVideo") // draggable element
@@ -121,7 +134,7 @@ async function createRoom() {
     roomId = roomRef.id;
     console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
     // document.querySelector('#currentRoom').innerText = `Current room is ${roomRef.id} - You are the caller!`;
-    fetch(apiUrl + 'insert?id=' + roomRef.id).then(_ => _.json())
+    fetch(apiUrl + 'insert?id=' + roomId + '&username=' + auth()).then(_ => _.json())
         .then(insert => insert.status && insert.status.id ? reConnect() : true);
 
     initCheckInterval();
@@ -177,14 +190,15 @@ async function joinRoom() {
     // roomDialog.open();
 }
 
-async function joinRoomById(roomId) {
+async function joinRoomById(roomId, username = null) {
     const db = firebase.firestore();
     const roomRef = db.collection('rooms').doc(`${roomId}`);
     const roomSnapshot = await roomRef.get();
     console.log('Got room:', roomSnapshot.exists);
-    fetch(apiUrl + 'remove?id=' + roomId);
+    fetch(apiUrl + 'remove?id=' + roomId + '&username=' + auth());
 
     if (roomSnapshot.exists) {
+        setCompanionUsername(username);
         console.log('Create PeerConnection with configuration: ', configuration);
         peerConnection = new RTCPeerConnection(configuration);
         registerPeerConnectionListeners();
@@ -306,6 +320,7 @@ function registerPeerConnectionListeners() {
             case "new":
             case "complete":
                 removeCheckInterval();
+                if (roomId) fetch(apiUrl + 'room?id=' + roomId).then(_ => _.json()).then(_ => _.room && _.room.client ? setCompanionUsername(_.room.client) : null);
                 break;
         }
     });
@@ -314,6 +329,8 @@ function registerPeerConnectionListeners() {
         console.log(`Connection state change: ${peerConnection.connectionState}`);
         switch (peerConnection.connectionState) {
             case "connected":
+                removeCheckInterval();
+                if (roomId) fetch(apiUrl + 'room?id=' + roomId).then(_ => _.json()).then(_ => _.room && _.room.client ? setCompanionUsername(_.room.client) : null);
                 return startTimer();
             case "connecting":
                 return deleteTimer('Ищем собеседника ...');
@@ -350,6 +367,10 @@ function setStatusText(text) {
     return document.getElementById('timer').innerText = text;
 }
 
+function setCompanionUsername(username = null) {
+    return document.getElementById('companion').innerText = username ? `Ваш собеседник: ${username}` : '';
+}
+
 function feedback() {
     let message = prompt('Опишите проблему');
     let _navigator = {};
@@ -360,6 +381,6 @@ function feedback() {
 
 init();
 
-document.body.addEventListener('touchmove', function(event) {
+document.body.addEventListener('touchmove', function (event) {
     event.preventDefault();
 }, false);

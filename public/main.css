@@ -5,6 +5,7 @@ body {
     font-family: Helvetica, sans-serif;
     user-select: none;
     -webkit-user-select: none;
+    color: white;
 }
 
 #remoteVideo {
@@ -64,17 +65,24 @@ body {
     pointer-events: none;
 }
 
-.buttons-container > button {
+.buttons-container > * {
     margin: 5px 0;
     pointer-events: initial;
 }
 
-.buttons-container > button:first-child {
+.buttons-container > *:first-child {
     margin-top: unset;
 }
 
-.buttons-container > button:last-child {
+.buttons-container > *:last-child {
     margin-bottom: unset;
+}
+
+.buttons-container > p {
+    width: calc(50vw - 20px);
+    max-width: 300px;
+    font-size: 12px;
+    opacity: .5;
 }
 
 #timer,
@@ -120,6 +128,11 @@ body {
     background-color: rgba(66, 66, 66, .5);
 }
 
+#companion {
+    opacity: 1;
+    font-size: 16px;
+}
+
 .hide {
     display: none;
 }
@@ -155,7 +168,12 @@ body {
     }
 }
 
-@media (orientation: landscape) {
+@media (orientation: landscape) and (max-width: 1024px) {
+    .logo {
+        top: max(env(safe-area-inset-top), 10px);
+        left: max(env(safe-area-inset-left), 10px);
+    }
+
     #localVideo {
         max-width: calc(50vw - 20px);
         max-height: calc(50vh - 20px);
