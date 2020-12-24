@@ -18,20 +18,40 @@ let remoteStream = null;
 let roomDialog = null;
 let roomId = null;
 let timer = null;
+let interval = null;
 // const apiUrl = 'http://localhost:3000/api/';
 const apiUrl = 'https://chat.queue.dev.ponomarevlad.ru/api/';
 
 async function connect() {
+    console.log('Connect')
     const queue = await fetch(apiUrl + 'get').then(_ => _.json()).catch(e => console.error(e) || {room: null});
     return queue.room && queue.room.id ? await joinRoomById(queue.room.id) : await createRoom();
 }
 
-async function reConnect() {
+async function checkAvailableRooms() {
+    console.log('checkAvailableRooms');
+    const queue = await fetch(apiUrl + 'get').then(_ => _.json()).catch(e => console.error(e) || {room: null});
+    return queue.room && queue.room.id ? await reConnect(queue.room.id) : null;
+}
+
+function initCheckInterval() {
+    console.log('initCheckInterval');
+    return interval = setInterval(checkAvailableRooms, 5000);
+}
+
+function removeCheckInterval(){
+    console.log('removeCheckInterval');
+    return clearInterval(interval);
+}
+
+async function reConnect(roomId = null) {
+    console.log('reConnect', roomId);
     try {
+        removeCheckInterval();
         deleteTimer('Ищем собеседника ...');
         await hangUp();
         await openUserMedia();
-        return await connect();
+        return roomId ? await joinRoomById(roomId) : await connect();
     } catch (e) {
         console.error(e);
         return location.reload();
@@ -44,6 +64,14 @@ async function init() {
     // document.querySelector('#createBtn').addEventListener('click', createRoom);
     // document.querySelector('#joinBtn').addEventListener('click', joinRoom);
     // roomDialog = new mdc.dialog.MDCDialog(document.querySelector('#room-dialog'));
+    // dragElement(document.getElementById("localVideo"));
+    // document.getElementById("localVideo").onleavepictureinpicture = e => e.target.style.opacity = 1;
+    // document.getElementById("localVideo").onclick = e => e.target.requestPictureInPicture(e.target.style.opacity = 0);
+
+    dragNdrop({
+        element: document.getElementById("localVideo") // draggable element
+    });
+
     setStatusText('Ищем собеседника ...');
     await openUserMedia();
     return await connect();
@@ -94,7 +122,9 @@ async function createRoom() {
     console.log(`New room created with SDP offer. Room ID: ${roomRef.id}`);
     // document.querySelector('#currentRoom').innerText = `Current room is ${roomRef.id} - You are the caller!`;
     fetch(apiUrl + 'insert?id=' + roomRef.id).then(_ => _.json())
-        .then(insert => insert.status && insert.status.id ? reConnect() : true)
+        .then(insert => insert.status && insert.status.id ? reConnect() : true);
+
+    initCheckInterval();
     // Code for creating a room above
 
     peerConnection.addEventListener('track', event => {
@@ -272,6 +302,12 @@ function registerPeerConnectionListeners() {
     peerConnection.addEventListener('icegatheringstatechange', () => {
         console.log(
             `ICE gathering state changed: ${peerConnection.iceGatheringState}`);
+        switch (peerConnection.iceGatheringState) {
+            case "new":
+            case "complete":
+                removeCheckInterval();
+                break;
+        }
     });
 
     peerConnection.addEventListener('connectionstatechange', () => {
@@ -323,3 +359,7 @@ function feedback() {
 }
 
 init();
+
+document.body.addEventListener('touchmove', function(event) {
+    event.preventDefault();
+}, false);

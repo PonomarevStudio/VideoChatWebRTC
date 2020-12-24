@@ -3,6 +3,8 @@ body {
     background: black;
     --base-padding: 20px;
     font-family: Helvetica, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 #remoteVideo {
@@ -20,63 +22,102 @@ body {
 }
 
 #localVideo {
-    /*width: 200px;*/
     max-width: calc(50vw - 20px);
     max-height: calc(30vh - 20px);
+    min-width: 50px;
+    min-height: 50px;
     position: fixed;
     bottom: max(env(safe-area-inset-bottom), var(--base-padding));
     right: max(env(safe-area-inset-right), var(--base-padding));
-    background: black;
-    border: 1px solid white;
+    /*background: #111111;*/
+    border-radius: 25px;
+    /*border: 1px solid white;*/
     z-index: 2;
+    box-shadow: 0 5px 15px rgba(17, 17, 17, 0.5);
+    cursor: move;
+    /*transition: all .3s ease-out;*/
+    touch-action: none;
+}
+
+#localVideo:hover {
+    /*opacity: .7;*/
+    /*transition: all .3s ease-out;*/
 }
 
 .logo {
     position: fixed;
-    top: max(env(safe-area-inset-top), var(--base-padding));
-    left: max(env(safe-area-inset-left), var(--base-padding));
+    top: max(env(safe-area-inset-top), 0);
+    left: max(env(safe-area-inset-left), 0);
     width: 300px;
     z-index: 100;
+    pointer-events: none;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    position: fixed;
+    z-index: 10;
+    bottom: max(env(safe-area-inset-bottom), var(--base-padding));
+    left: max(env(safe-area-inset-left), var(--base-padding));
+    pointer-events: none;
+}
+
+.buttons-container > button {
+    margin: 5px 0;
+    pointer-events: initial;
+}
+
+.buttons-container > button:first-child {
+    margin-top: unset;
+}
+
+.buttons-container > button:last-child {
+    margin-bottom: unset;
 }
 
 #timer,
 #refresh,
 #feedback {
-    position: fixed;
     font-size: 30px;
     color: white;
-    z-index: 10;
     display: block;
-    padding: 10px 20px;
     -webkit-backdrop-filter: blur(25px);
     background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px 20px;
     border-radius: 30px;
     font-weight: 600;
 }
 
 #timer {
+    position: fixed;
+    z-index: 11;
     top: max(env(safe-area-inset-top), var(--base-padding));
     right: max(env(safe-area-inset-right), var(--base-padding));
+    pointer-events: none;
 }
 
 #refresh,
 #feedback {
     -webkit-appearance: none;
     border: none;
-    bottom: max(env(safe-area-inset-bottom), var(--base-padding));
-    left: max(env(safe-area-inset-left), var(--base-padding));
     cursor: pointer;
 }
 
 #feedback {
     font-size: 16px;
     padding: 10px 15px;
-    bottom: calc(max(env(safe-area-inset-bottom), var(--base-padding)) + 80px);
 }
 
 #feedback:not(:hover) {
     color: rgba(255, 255, 255, .5);
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+#refresh:hover,
+#feedback:hover {
+    background-color: rgba(66, 66, 66, .5);
 }
 
 .hide {
@@ -97,10 +138,26 @@ body {
     }
 
     #feedback {
-        bottom: calc(max(env(safe-area-inset-bottom), var(--base-padding)) + 50px);
+        font-size: 14px;
+        padding: 5px 10px;
+        /*bottom: calc(max(env(safe-area-inset-bottom), var(--base-padding)) + 50px);*/
     }
 
     #localVideo {
         max-height: calc(20vh - 20px);
+        border-radius: 20px;
+    }
+}
+
+@media (max-width: 350px) {
+    body {
+        --base-padding: 10px;
+    }
+}
+
+@media (orientation: landscape) {
+    #localVideo {
+        max-width: calc(50vw - 20px);
+        max-height: calc(50vh - 20px);
     }
 }

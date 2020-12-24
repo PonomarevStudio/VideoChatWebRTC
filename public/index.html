@@ -8,15 +8,18 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script defer src="/__/firebase/init.js"></script>
-    <link rel="stylesheet" type="text/css" href="main.css?v11">
-    <script src="app.js?v11" defer></script>
+    <script src="https://thibaultjanbeyer.github.io/dragNdrop/dNd.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="main.css?v16">
+    <script src="app.js?v16" defer></script>
 </head>
 <body>
 <img src="logo.png" class="logo" alt="Дерзайти Naumen">
 <video id="localVideo" muted autoplay playsinline></video>
 <video id="remoteVideo" autoplay playsinline></video>
 <time id="timer">Ищем собеседника ...</time>
-<button id="refresh" onclick="location.reload()">Сменить собеседника</button>
-<button id="feedback" onclick="feedback()">Сообщить об ошибке</button>
+<section class="buttons-container">
+    <button id="feedback" onclick="feedback()">Сообщить об ошибке</button>
+    <button id="refresh" onclick="reConnect()">Сменить собеседника</button>
+</section>
 </body>
 </html>
