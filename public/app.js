@@ -69,6 +69,10 @@ function auth(message = 'Введи имя или никнейм') {
     return localStorage.getItem('username');
 }
 
+function loadRoomData() {
+    if (roomId) return fetch(apiUrl + 'room?id=' + roomId).then(_ => _.json()).then(_ => _.room && _.room.client ? setCompanionUsername(_.room.client) : null);
+}
+
 async function init() {
     // document.querySelector('#cameraBtn').addEventListener('click', openUserMedia);
     // document.querySelector('#hangupBtn').addEventListener('click', hangUp);
@@ -320,8 +324,7 @@ function registerPeerConnectionListeners() {
             case "new":
             case "complete":
                 removeCheckInterval();
-                if (roomId) fetch(apiUrl + 'room?id=' + roomId).then(_ => _.json()).then(_ => _.room && _.room.client ? setCompanionUsername(_.room.client) : null);
-                break;
+                return loadRoomData();
         }
     });
 
@@ -330,8 +333,8 @@ function registerPeerConnectionListeners() {
         switch (peerConnection.connectionState) {
             case "connected":
                 removeCheckInterval();
-                if (roomId) fetch(apiUrl + 'room?id=' + roomId).then(_ => _.json()).then(_ => _.room && _.room.client ? setCompanionUsername(_.room.client) : null);
-                return startTimer();
+                startTimer();
+                return loadRoomData();
             case "connecting":
                 return deleteTimer('Ищем собеседника ...');
             case "disconnected":
@@ -375,8 +378,8 @@ function feedback() {
     let message = prompt('Опишите проблему');
     let _navigator = {};
     for (let i in navigator) _navigator[i] = navigator[i];
-    navigator.sendBeacon(apiUrl + 'feedback', JSON.stringify({message, navigator: _navigator}));
-    return alert('Сообщение отправлено !');
+    navigator.sendBeacon(apiUrl + 'feedback', JSON.stringify({username: auth(), message, navigator: _navigator}));
+    return alert('Информация отправлена !');
 }
 
 init();

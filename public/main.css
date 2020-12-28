@@ -8,6 +8,10 @@ body {
     color: white;
 }
 
+button{
+    outline: unset;
+}
+
 #remoteVideo {
     position: fixed;
     left: 0;
@@ -92,7 +96,7 @@ body {
     color: white;
     display: block;
     -webkit-backdrop-filter: blur(25px);
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(45, 45, 45, 0.3);
     padding: 10px 20px;
     border-radius: 30px;
     font-weight: 600;
@@ -120,7 +124,7 @@ body {
 
 #feedback:not(:hover) {
     color: rgba(255, 255, 255, .5);
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(45, 45, 45, 0.3);
 }
 
 #refresh:hover,
