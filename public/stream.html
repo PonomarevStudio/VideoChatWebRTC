@@ -9,27 +9,38 @@
     <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-firestore.js"></script>
     <script defer src="/__/firebase/init.js"></script>
     <script src="https://thibaultjanbeyer.github.io/dragNdrop/dNd.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="main.css?v27">
-    <script src="app.js?v27" defer></script>
-    <script src="https://with.❤.from.ponomarev.studio"></script>
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <script src="stream.app.js?2" defer></script>
     <style>
-        #psBanner {
-            bottom: initial;
-            top: var(--margin);
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #remoteVideo {
+            all: initial;
+            background: black;
+            width: 100vw;
         }
     </style>
 </head>
 <body>
 <!--<img src="logo.png" class="logo" alt="Дерзайти Naumen">-->
-<video id="localVideo" muted autoplay playsinline></video>
-<video id="remoteVideo" autoplay playsinline></video>
-<time id="timer">Ищем собеседника ...</time>
-<section class="buttons-container">
+<!--<video id="localVideo" muted autoplay playsinline></video>-->
+<video id="remoteVideo" autoplay controls playsinline></video>
+<!--<time id="timer">Подключаемся ...</time>-->
+<!--<section class="buttons-container">
     <p id="companion"></p>
     <p id="user"></p>
     <p>Если не удалось установить соединение с коллегами, смени браузер или открой чат со смартфона</p>
     <button id="feedback" onclick="feedback()">Сообщить об ошибке</button>
     <button id="refresh" onclick="reConnect()">Сменить собеседника</button>
-</section>
+</section>-->
 </body>
 </html>
