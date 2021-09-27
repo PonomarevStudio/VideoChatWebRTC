@@ -10,7 +10,7 @@ async function updateAccess() {
     console.debug(data.access);
     localStorage.setItem('access', JSON.stringify(data.access));
     switch (location.host) {
-        case 'naumenprofi.ru':
+        case 'xn--90ajddc2awbx3g.xn--p1ai':
             if (data.access.version && access && access.version) {
                 if (data.access.version > access.version) return location.reload();
             }
@@ -23,7 +23,7 @@ async function updateAccess() {
 }
 
 function handleVideoChatLink(data) {
-    const link = window.videochatLink || document.querySelector('a[href="https://ps-webrtc.web.app/production"]');
+    const link = window.videochatLink || document.querySelector(`a[href*="ps-webrtc.web.app"]`);
     if (!link) return;
     window.videochatLink = link;
     if (data.videochat) {
@@ -41,6 +41,6 @@ function handleVideoChat(data) {
     if (data.videochatEnd) {
         alert('Скоро вы сможете войти в чат-рулетку, а пока возвращайтесь к нашей трансляции');
         window.close();
-        location.href = 'https://naumenprofi.ru/?v2';
+        location.href = 'https://жизньубрир.рф';
     }
 }
