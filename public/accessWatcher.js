@@ -26,8 +26,8 @@ function handleVideoChatLink(data) {
     const link = window.videochatLink || document.querySelector(`a[href*="ps-webrtc.web.app"]`);
     if (!link) return;
     window.videochatLink = link;
-    if (data.videochat) {
-        link.href = data.videochat;
+    if (data.videochatActive) {
+        if (data.videochatUrl) link.href = data.videochatUrl;
         link.title = 'Присоединяйся к чат-рулетке для общения с коллегами';
         link.querySelector('span').innerText = 'Войти в чат-рулетку'
         link.style.cursor = 'pointer';
@@ -42,7 +42,7 @@ function handleVideoChatLink(data) {
 }
 
 function handleVideoChat(data) {
-    if (data.videochatEnd) {
+    if (!data.videochatActive) {
         alert('Скоро вы сможете войти в чат-рулетку, а пока возвращайтесь к нашей трансляции');
         window.close();
         location.href = 'https://жизньубрир.рф';
