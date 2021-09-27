@@ -7,7 +7,7 @@ window.addEventListener('load', () => {
 async function updateAccess() {
     const response = await fetch('https://chat.queue.dev.ponomarevlad.ru/api/access');
     const data = await response.json();
-    console.debug(data.access);
+    console.debug('xn--90ajddc2awbx3g.xn--p1ai', location.host, location.host === 'xn--90ajddc2awbx3g.xn--p1ai', data.access);
     localStorage.setItem('access', JSON.stringify(data.access));
     switch (location.host) {
         case 'xn--90ajddc2awbx3g.xn--p1ai':
