@@ -28,10 +28,12 @@ function handleVideoChatLink(data) {
     window.videochatLink = link;
     if (data.videochatActive) {
         if (data.videochatUrl) link.href = data.videochatUrl;
+        link.style.opacity = 1;
         link.title = 'Присоединяйся к чат-рулетке для общения с коллегами';
         link.querySelector('span').innerText = 'Войти в чат-рулетку';
         link.querySelector('div').style.cursor = 'pointer';
     } else {
+        link.style.opacity = .5;
         link.removeAttribute('href');
         link.title = 'Скоро вы сможете войти в чат-рулетку';
         link.querySelector('span').innerText = 'Скоро вы сможете войти в чат-рулетку';
