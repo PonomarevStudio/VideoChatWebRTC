@@ -28,12 +28,14 @@ function handleVideoChatLink(data) {
     window.videochatLink = link;
     if (data.videochat) {
         link.href = data.videochat;
-        link.innerText = 'Присоединяйся к чат-рулетке для общения с коллегами ➜';
-        link.style.pointerEvents = 'initial';
+        link.title = 'Присоединяйся к чат-рулетке для общения с коллегами ➜';
+        link.style.cursor = 'pointer';
+        /*link.style.pointerEvents = 'initial';*/
     } else {
         link.href = '';
-        link.innerText = 'Скоро вы сможете войти в чат-рулетку';
-        link.style.pointerEvents = 'none';
+        link.title = 'Скоро вы сможете войти в чат-рулетку';
+        link.style.cursor = 'not-allowed';
+        /*link.style.pointerEvents = 'none';*/
     }
 }
 
