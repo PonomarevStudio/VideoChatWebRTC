@@ -29,15 +29,13 @@ function handleVideoChatLink(data) {
     if (data.videochatActive) {
         if (data.videochatUrl) link.href = data.videochatUrl;
         link.title = 'Присоединяйся к чат-рулетке для общения с коллегами';
-        link.querySelector('span').innerText = 'Войти в чат-рулетку'
-        link.style.cursor = 'pointer';
-        /*link.style.pointerEvents = 'initial';*/
+        link.querySelector('span').innerText = 'Войти в чат-рулетку';
+        link.querySelector('div').style.cursor = 'pointer';
     } else {
-        link.href = '';
+        link.removeAttribute('href');
         link.title = 'Скоро вы сможете войти в чат-рулетку';
-        link.querySelector('span').innerText = 'Скоро вы сможете войти в чат-рулетку'
-        link.style.cursor = 'not-allowed';
-        /*link.style.pointerEvents = 'none';*/
+        link.querySelector('span').innerText = 'Скоро вы сможете войти в чат-рулетку';
+        link.querySelector('div').style.cursor = 'not-allowed';
     }
 }
 
