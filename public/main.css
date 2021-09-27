@@ -8,7 +8,7 @@ body {
     color: white;
 }
 
-button{
+button {
     outline: unset;
 }
 
@@ -51,9 +51,9 @@ button{
 
 .logo {
     position: fixed;
-    top: max(env(safe-area-inset-top), 0);
-    left: max(env(safe-area-inset-left), 0);
-    width: 300px;
+    top: max(env(safe-area-inset-top), var(--base-padding));
+    left: max(env(safe-area-inset-left), var(--base-padding));
+    width: 150px;
     z-index: 100;
     pointer-events: none;
 }
@@ -142,9 +142,9 @@ button{
 }
 
 @media (max-width: 1024px) {
-    .logo {
+    /*.logo {
         width: 150px;
-    }
+    }*/
 
     #timer,
     #refresh,
@@ -173,11 +173,10 @@ button{
 }
 
 @media (orientation: landscape) and (max-width: 1024px) {
-    .logo {
+    /*.logo {
         top: max(env(safe-area-inset-top), 10px);
         left: max(env(safe-area-inset-left), 10px);
-    }
-
+    }*/
     #localVideo {
         max-width: calc(50vw - 20px);
         max-height: calc(50vh - 20px);
