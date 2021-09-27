@@ -12,7 +12,7 @@ async function updateAccess() {
     switch (location.host) {
         case 'xn--90ajddc2awbx3g.xn--p1ai':
             if (data.access.version && access && access.version) {
-                if (data.access.version > access.version) return location.reload();
+                if (data.access.version > access.version) return setTimeout(() => location.reload(), 100);
             }
             handleVideoChatLink(data.access);
             break;
