@@ -44,7 +44,9 @@ function handleVideoChatLink(data) {
 function handleVideoChat(data) {
     if (!data.videochatActive) {
         alert('Скоро вы сможете войти в чат-рулетку, а пока возвращайтесь к нашей трансляции');
-        window.close();
-        location.href = 'https://жизньубрир.рф';
+        setTimeout(() => {
+            window.close();
+            location.href = 'https://жизньубрир.рф';
+        }, 100)
     }
 }
