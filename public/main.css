@@ -53,7 +53,7 @@ button {
     position: fixed;
     top: max(env(safe-area-inset-top), var(--base-padding));
     left: max(env(safe-area-inset-left), var(--base-padding));
-    width: 150px;
+    width: 300px;
     z-index: 100;
     pointer-events: none;
 }
@@ -142,9 +142,9 @@ button {
 }
 
 @media (max-width: 1024px) {
-    /*.logo {
+    .logo {
         width: 150px;
-    }*/
+    }
 
     #timer,
     #refresh,
