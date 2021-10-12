@@ -50,7 +50,7 @@ button {
 }
 
 body:before {
-    content: '';
+    /*content: '';*/
     top: 0;
     left: 0;
     z-index: 10;
@@ -121,7 +121,7 @@ body:before {
 }
 
 header {
-    display: none;
+    display: flex;
     justify-content: space-between;
     align-items: center;
     position: fixed;
