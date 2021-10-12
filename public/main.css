@@ -121,7 +121,7 @@ body:before {
 }
 
 header {
-    display: flex;
+    display: none;
     justify-content: space-between;
     align-items: center;
     position: fixed;
